@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>模型水印探針儀 —— 版權追溯守護者</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#100B18;
+  --bg2:#1A1324;
+  --panel:#1E1729;
+  --panel2:#251C33;
+  --line:#382A4A;
+  --ink:#EFE7F7;
+  --ink-dim:#A997C0;
+  --violet:#B98EFF;
+  --teal:#4CE8CF;
+  --amber:#FFB84C;
+  --danger:#FF6E7A;
+  --ok:#5CE6A0;
+  --font-body:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#100B18; --bg2:#1A1324; --panel:#1E1729; --panel2:#251C33;
+    --line:#382A4A; --ink:#EFE7F7; --ink-dim:#A997C0;
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% -10%, #2A1C42 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 10%, #17253A 0%, transparent 55%),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal);}
+
+/* ---------- 探針儀外殼 ---------- */
+.probe-shell{
+  max-width:1180px;
+  margin:0 auto;
+  padding:18px 16px 60px;
+}
+.probe-head{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:18px 20px;
+  background:linear-gradient(160deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  border-radius:18px;
+  position:relative;
+  overflow:hidden;
+}
+.probe-head::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(100deg, rgba(185,142,255,.05) 0 2px, transparent 2px 26px);
+  pointer-events:none;
+}
+.probe-icon-wrap{
+  flex:0 0 auto;width:150px;height:150px;position:relative;z-index:1;
+  filter:drop-shadow(0 0 16px rgba(76,232,207,.45));
+}
+@media (max-width:640px){.probe-icon-wrap{width:110px;height:110px;margin:0 auto;}}
+.probe-icon-wrap svg{width:100%;height:100%;overflow:visible;}
+.probe-ring{fill:none;stroke:var(--line);stroke-width:1.4;}
+.probe-sweep{transform-origin:32px 32px;animation:probesweep 3.2s linear infinite;}
+@keyframes probesweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.probe-core{transform-origin:32px 32px;animation:coreBlip 2.2s ease-in-out infinite;}
+@keyframes coreBlip{
+  0%,100%{transform:scale(1);opacity:1;}
+  50%{transform:scale(1.25);opacity:.7;}
+}
+.probe-mini-dot{fill:var(--teal);}
+.probe-target{transform-box:fill-box;transform-origin:center;animation:targetBlip 2.4s ease-in-out infinite;}
+@keyframes targetBlip{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.3);}
+}
+.probe-brackets{animation:bracketGlow 2.6s ease-in-out infinite;}
+@keyframes bracketGlow{
+  0%,100%{opacity:.55;}
+  50%{opacity:1;}
+}
+.head-text{position:relative;z-index:1;}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--amber);
+  letter-spacing:.04em;
+}
+h1{
+  margin:2px 0 2px;
+  font-size:clamp(20px,3.4vw,28px);
+  font-weight:900;
+  letter-spacing:.01em;
+}
+.sub{color:var(--ink-dim);font-size:13.5px;}
+
+.ph-topline{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  font-family:var(--font-mono);font-size:11px;color:var(--ink-dim);
+  margin-bottom:12px;position:relative;z-index:1;
+}
+.dot-live{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--ok);box-shadow:0 0 6px var(--ok);margin-right:6px;
+  animation:dotPulse 1.8s ease-in-out infinite;
+}
+@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.ph-badge{padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--teal);}
+.ph-body{display:flex;gap:18px;align-items:center;position:relative;z-index:1;flex-wrap:wrap;}
+.head-text{flex:1 1 240px;min-width:0;}
+@media (max-width:640px){.ph-body{justify-content:center;text-align:center;}.head-text{text-align:center;}.sub-long{margin-left:auto;margin-right:auto;}}
+h1 .x{color:var(--amber);font-weight:900;margin:0 3px;}
+.sub-long{color:var(--ink-dim);font-size:13.5px;max-width:72ch;margin-top:6px;}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1;}
+.stat-chip{
+  flex:1 1 150px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:8px 12px;font-family:var(--font-mono);font-size:11px;color:var(--ink-dim);
+}
+.stat-chip b{display:block;font-size:14px;color:var(--ink);margin-top:2px;}
+
+/* ---------- 滿版大雷達 ---------- */
+.radar-hero-wrap{
+  margin-top:18px;position:relative;z-index:1;
+  width:100%;max-width:100%;
+}
+.radar-hero{
+  width:100%;height:auto;max-width:100%;display:block;
+  overflow:visible;
+}
+.hero-ring{fill:none;stroke:var(--line);stroke-width:1.2;}
+.hero-sweep{transform-origin:200px 150px;animation:probesweep 4.5s linear infinite;}
+.hero-core{transform-origin:200px 150px;animation:coreBlip 2.2s ease-in-out infinite;}
+.hero-dot{fill:var(--teal);animation:dotTwinkle 2.2s ease-in-out infinite;}
+@keyframes dotTwinkle{
+  0%,100%{opacity:.25;}
+  50%{opacity:1;}
+}
+.hero-target{transform-box:fill-box;transform-origin:center;animation:targetBlip 2.4s ease-in-out infinite;}
+.radar-caption{
+  text-align:center;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--ink-dim);margin-top:10px;
+}
+
+/* ---------- 分頁籤 ---------- */
+.tabs{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-bottom:16px;
+}
+@media (max-width:640px){
+  .tabs{gap:6px;}
+  .tab-btn{padding:7px 10px;font-size:12px;}
+}
+.tab-btn{
+  flex:0 0 auto;
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--ink-dim);
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:9px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+.tab-btn.active{
+  color:#10131A;
+  background:linear-gradient(120deg,var(--teal),var(--violet));
+  border-color:transparent;
+  font-weight:700;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:22px clamp(16px,4vw,30px);
+  min-height:200px;
+}
+.panel[hidden]{display:none;}
+
+.section-tag{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--violet);
+  border:1px solid var(--line);
+  padding:3px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+h2{font-size:19px;margin:0 0 12px;}
+h3{font-size:15.5px;color:var(--teal);margin:20px 0 8px;}
+p{margin:0 0 12px;max-width:74ch;}
+ul{margin:0 0 14px;padding-left:1.3em;}
+li{margin-bottom:8px;}
+.term-name{color:var(--amber);font-weight:700;}
+
+.term-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  background:var(--panel2);
+}
+.term-card .en{font-family:var(--font-mono);font-size:12px;color:var(--teal);}
+
+.meaning-card{
+  border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin-bottom:14px;background:var(--panel2);
+}
+.mc-head{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.mc-head .en{font-family:var(--font-mono);font-size:11.5px;color:var(--teal);}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (max-width:560px){.mc-grid{grid-template-columns:1fr;}}
+.mc-col{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;}
+.mc-col .mc-label{
+  font-family:var(--font-mono);font-size:10.5px;color:var(--violet);
+  margin-bottom:5px;display:block;letter-spacing:.03em;
+}
+.mc-col p{margin:0;font-size:13px;max-width:none;}
+
+.callout-box{
+  margin-top:16px;padding:14px 16px;border-radius:10px;
+  background:var(--panel2);border-left:3px solid var(--danger);
+}
+.callout-box .cb-title{
+  font-family:var(--font-mono);color:var(--danger);font-size:12px;
+  margin-bottom:8px;display:block;letter-spacing:.02em;
+}
+.callout-box ul{margin:0;padding-left:1.2em;}
+.callout-box li{margin-bottom:6px;font-size:13px;}
+
+.scenario-steps{counter-reset:step;list-style:none;padding-left:0;}
+.scenario-steps li{
+  position:relative;padding-left:38px;margin-bottom:14px;
+}
+.scenario-steps li::before{
+  counter-increment:step;content:counter(step);
+  position:absolute;left:0;top:0;
+  width:26px;height:26px;border-radius:8px;
+  background:var(--bg2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:12px;color:var(--teal);
+}
+
+pre{
+  background:#0C0913;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px 16px;
+  font-family:var(--font-mono);
+  font-size:12.6px;
+  line-height:1.65;
+  color:#DCE9E4;
+  white-space:pre-wrap;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  max-width:100%;
+  overflow-x:auto;
+}
+code{font-family:var(--font-mono);}
+
+/* ---------- 互動實驗 ---------- */
+.exp-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px 18px;
+  margin-bottom:18px;
+  background:var(--panel2);
+}
+.exp-card h3{margin-top:0;}
+.exp-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0;}
+input[type=range]{
+  flex:1 1 200px; accent-color:var(--violet); min-width:150px;
+}
+.readout{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  padding:8px 12px;
+  border:1px dashed var(--line);
+  border-radius:8px;
+  background:var(--bg2);
+  min-height:20px;
+}
+.btn{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid var(--line);
+  background:var(--bg2);
+  color:var(--ink);
+  cursor:pointer;
+}
+.btn:hover{border-color:var(--teal);}
+.btn.primary{background:linear-gradient(120deg,var(--teal),var(--violet));color:#10131A;font-weight:700;border:none;}
+.gauge{
+  height:10px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);
+  overflow:hidden;margin-top:6px;
+}
+.gauge-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ok),var(--amber),var(--danger));transition:width .2s;}
+
+.bar-row{display:flex;align-items:center;gap:10px;margin-top:10px;font-family:var(--font-mono);font-size:12px;color:var(--ink-dim);}
+.bar-row .gauge{flex:1;margin-top:0;}
+.bar-teal .gauge-fill{background:linear-gradient(90deg,var(--teal),var(--violet)) !important;}
+
+/* -- 實驗一：抽取衝擊點陣 -- */
+.dotgrid-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:center;}
+.dotgrid{
+  display:grid;grid-template-columns:repeat(10,1fr);gap:5px;
+  width:210px;flex:0 0 auto;
+}
+.dotgrid .dot{
+  width:100%;aspect-ratio:1;border-radius:50%;
+  background:var(--teal);opacity:.32;
+  transition:background .2s, opacity .2s, box-shadow .2s;
+}
+.dotgrid .dot.hit{
+  background:var(--danger);opacity:1;
+  box-shadow:0 0 7px rgba(255,110,122,.65);
+}
+.exp1-side{flex:1 1 210px;min-width:210px;}
+
+/* -- 實驗二：特徵空間觸發器 -- */
+.scatter-wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;}
+.scattersvg{
+  width:220px;height:158px;flex:0 0 auto;
+  border:1px solid var(--line);border-radius:10px;background:var(--bg2);
+}
+.feat-dot{fill:var(--teal);opacity:.55;}
+.feat-trig{fill:var(--amber);}
+.feat-trig.on{filter:drop-shadow(0 0 5px var(--amber));}
+.feat-wm{fill:var(--danger);}
+.feat-wm.on{filter:drop-shadow(0 0 7px var(--danger));}
+.feat-link{stroke:var(--amber);stroke-width:1.3;stroke-dasharray:3 2;opacity:0;transition:opacity .3s;}
+.feat-link.show{opacity:.9;}
+.exp2-out{flex:1 1 180px;min-width:180px;}
+.stamp{
+  display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+  padding:7px 12px;border-radius:8px;font-family:var(--font-mono);font-size:12.5px;
+  border:1px solid var(--line);background:var(--bg2);color:var(--ink-dim);transition:all .25s;
+}
+.stamp.hit{
+  color:#10131A;background:linear-gradient(120deg,var(--ok),var(--teal));border-color:transparent;
+  transform:scale(1.04);box-shadow:0 0 16px rgba(92,230,160,.5);
+}
+
+/* -- 實驗三：雙曲線防禦圖表 -- */
+.chartsvg{
+  width:100%;height:auto;display:block;margin:10px 0 8px;
+  border:1px solid var(--line);border-radius:10px;background:var(--bg2);
+}
+.curve{fill:none;stroke-width:2.2;}
+.curve.acc{stroke:var(--amber);}
+.curve.wm{stroke:var(--violet);}
+.chart-axis{stroke:var(--line);stroke-width:1;}
+.chart-marker{stroke:var(--teal);stroke-width:1;stroke-dasharray:3 2;}
+.chart-legend{font-family:var(--font-mono);font-size:9.5px;}
+.readout-table{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;}
+.ro-item{
+  flex:1 1 120px;font-family:var(--font-mono);font-size:11.5px;color:var(--ink-dim);
+  background:var(--bg2);border:1px solid var(--line);border-left-width:3px;
+  border-radius:8px;padding:8px 10px;
+}
+.ro-item b{display:block;font-size:16px;margin-top:3px;}
+
+/* ---------- 測驗 ---------- */
+.quiz-meta{
+  font-family:var(--font-mono);font-size:12.5px;color:var(--ink-dim);
+  margin-bottom:14px;
+}
+.q-block{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px clamp(12px,3vw,20px);
+  margin-bottom:18px;
+  background:var(--panel2);
+}
+.q-diff{font-family:var(--font-mono);font-size:11px;color:var(--amber);margin-bottom:4px;}
+.q-title{font-weight:700;margin:0 0 12px;font-size:15px;}
+.opt-list{display:flex;flex-direction:column;gap:10px;}
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg2);
+  color:var(--ink);
+  padding:10px 12px;
+  cursor:pointer;
+  font-family:var(--font-body);
+  font-size:13.5px;
+}
+.opt:hover{border-color:var(--teal);}
+.opt.code pre{margin:6px 0 0;background:#0A0810;font-size:11.8px;}
+.opt-label{font-family:var(--font-mono);color:var(--violet);margin-right:6px;}
+.opt.selected{border-color:var(--violet);}
+.opt.correct{border-color:var(--ok);background:rgba(92,230,160,.08);}
+.opt.wrong{border-color:var(--danger);background:rgba(255,110,122,.08);}
+.opt:disabled{cursor:default;}
+
+.explain-box{
+  margin-top:14px;
+  border-top:1px dashed var(--line);
+  padding-top:12px;
+  display:none;
+}
+.explain-box.show{display:block;}
+.explain-ok{color:var(--ok);font-weight:700;margin-bottom:6px;}
+.explain-item{font-size:13px;color:var(--ink-dim);margin-bottom:5px;}
+.key-point{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:8px;
+  background:var(--bg2);
+  border-left:3px solid var(--amber);
+  font-size:13px;
+}
+
+.quiz-summary{
+  font-family:var(--font-mono);
+  text-align:center;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel2);
+  margin-top:6px;
+}
+
+.quiz-complete{
+  margin-top:18px;padding:28px 20px;text-align:center;
+  border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(160deg,var(--panel2),var(--bg2));
+  display:none;
+}
+.quiz-complete.show{display:block;}
+.qc-title{font-family:var(--font-mono);color:var(--teal);font-size:13px;margin-bottom:10px;letter-spacing:.06em;}
+.qc-score{font-family:var(--font-mono);font-weight:700;margin-bottom:8px;}
+.qc-score b{font-size:44px;color:var(--ok);}
+.qc-score span{font-size:22px;color:var(--ink-dim);}
+.qc-msg{color:var(--ink-dim);font-size:13px;margin-bottom:18px;}
+
+footer{
+  text-align:center;
+  color:var(--ink-dim);
+  font-size:12px;
+  margin-top:24px;
+  font-family:var(--font-mono);
+}
+</style>
+</head>
+<body>
+<div class="probe-shell">
+
+  <div class="probe-head" style="flex-direction:column;align-items:stretch;">
+    <div class="ph-topline">
+      <span><span class="dot-live"></span>WATERMARK-0.05 · 探測機型 · 訊號穩定</span>
+      <span class="ph-badge">STATUS：監控中</span>
+    </div>
+    <div class="head-text">
+      <div class="eyebrow">OUTLIER-MONSTER PROBE UNIT / 離群怪獸探針儀</div>
+      <h1>模型水印 <span class="x">×</span> 版權追溯 <span class="x">×</span> 觸發器驗證</h1>
+      <p class="sub-long">敵對社團的複製怪獸躲在千萬次 API 呼叫的數據海裡，表面上長得一模一樣。這台探針儀帶你植入後門觸發器、比對水印回應、算出統計顯著性，練成一眼識破抄襲怪獸的版權追溯能力。</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat-chip"><span>觸發樣本占比</span><b>1 ~ 5%</b></div>
+      <div class="stat-chip"><span>驗證信心門檻</span><b>&gt; 90%</b></div>
+      <div class="stat-chip"><span>核心武器</span><b>Trigger × P-value</b></div>
+    </div>
+
+    <div class="radar-hero-wrap">
+      <svg class="radar-hero" viewBox="0 0 400 300" aria-hidden="true">
+        <circle class="hero-ring" cx="200" cy="150" r="60"/>
+        <circle class="hero-ring" cx="200" cy="150" r="100"/>
+        <circle class="hero-ring" cx="200" cy="150" r="140"/>
+
+        <g class="hero-sweep">
+          <path d="M200 150 L200 10 A140 140 0 0 1 268 34 Z" fill="var(--teal)" opacity=".15"/>
+          <line x1="200" y1="150" x2="200" y2="10" stroke="var(--teal)" stroke-width="1.6"/>
+        </g>
+
+        <!-- 掃描到的一般特徵點 -->
+        <circle class="hero-dot" cx="120" cy="50" r="2.2" opacity=".55" style="animation-delay:0s"/>
+        <circle class="hero-dot" cx="180" cy="38" r="1.8" opacity=".45" style="animation-delay:0.3s"/>
+        <circle class="hero-dot" cx="260" cy="45" r="2.4" opacity=".6" style="animation-delay:0.6s"/>
+        <circle class="hero-dot" cx="320" cy="82" r="2" opacity=".5" style="animation-delay:0.9s"/>
+        <circle class="hero-dot" cx="340" cy="140" r="2.2" opacity=".55" style="animation-delay:1.2s"/>
+        <circle class="hero-dot" cx="330" cy="202" r="1.8" opacity=".45" style="animation-delay:1.5s"/>
+        <circle class="hero-dot" cx="282" cy="250" r="2.4" opacity=".6" style="animation-delay:1.8s"/>
+        <circle class="hero-dot" cx="222" cy="270" r="2" opacity=".5" style="animation-delay:0.15s"/>
+        <circle class="hero-dot" cx="160" cy="266" r="2.2" opacity=".55" style="animation-delay:0.45s"/>
+        <circle class="hero-dot" cx="100" cy="246" r="1.8" opacity=".45" style="animation-delay:0.75s"/>
+        <circle class="hero-dot" cx="60" cy="190" r="2.4" opacity=".6" style="animation-delay:0s"/>
+        <circle class="hero-dot" cx="55" cy="120" r="2" opacity=".5" style="animation-delay:0.3s"/>
+        <circle class="hero-dot" cx="80" cy="70" r="1.8" opacity=".45" style="animation-delay:0.6s"/>
+        <circle class="hero-dot" cx="150" cy="100" r="2" opacity=".5" style="animation-delay:0.9s"/>
+        <circle class="hero-dot" cx="250" cy="100" r="2.2" opacity=".55" style="animation-delay:1.2s"/>
+        <circle class="hero-dot" cx="200" cy="90" r="1.8" opacity=".45" style="animation-delay:1.5s"/>
+        <circle class="hero-dot" cx="130" cy="150" r="2" opacity=".5" style="animation-delay:1.8s"/>
+        <circle class="hero-dot" cx="270" cy="150" r="2.2" opacity=".55" style="animation-delay:0.15s"/>
+        <circle class="hero-dot" cx="150" cy="202" r="2" opacity=".5" style="animation-delay:0.45s"/>
+        <circle class="hero-dot" cx="250" cy="202" r="1.8" opacity=".45" style="animation-delay:0.75s"/>
+        <circle class="hero-dot" cx="200" cy="212" r="2.2" opacity=".55" style="animation-delay:0s"/>
+        <circle class="hero-dot" cx="180" cy="132" r="1.6" opacity=".4" style="animation-delay:0.3s"/>
+        <circle class="hero-dot" cx="222" cy="170" r="1.8" opacity=".45" style="animation-delay:0.6s"/>
+        <circle class="hero-dot" cx="170" cy="180" r="1.6" opacity=".4" style="animation-delay:0.9s"/>
+        <circle class="hero-dot" cx="232" cy="122" r="1.8" opacity=".45" style="animation-delay:1.2s"/>
+        <circle class="hero-dot" cx="190" cy="240" r="2" opacity=".5" style="animation-delay:1.5s"/>
+
+        <!-- 被偵測到的抄襲怪獸（可愛紅色笑臉） -->
+        <g class="hero-target" transform="translate(112,78)">
+          <circle r="15" fill="var(--danger)"/>
+          <circle cx="-5.2" cy="-3.2" r="4.6" fill="#fff"/>
+          <circle cx="5.2" cy="-3.2" r="4.6" fill="#fff"/>
+          <circle cx="-5.2" cy="-3.2" r="2" fill="#2a0f14"/>
+          <circle cx="5.2" cy="-3.2" r="2" fill="#2a0f14"/>
+          <path d="M-6 5.5 Q0 11 6 5.5" stroke="#2a0f14" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <circle cx="-10" cy="3" r="2.2" fill="#fff" opacity=".3"/>
+          <circle cx="10" cy="3" r="2.2" fill="#fff" opacity=".3"/>
+        </g>
+        <g class="hero-target" transform="translate(300,60)" style="animation-delay:.4s;">
+          <circle r="13" fill="var(--danger)"/>
+          <circle cx="-4.5" cy="-2.8" r="4" fill="#fff"/>
+          <circle cx="4.5" cy="-2.8" r="4" fill="#fff"/>
+          <circle cx="-4.5" cy="-2.8" r="1.7" fill="#2a0f14"/>
+          <circle cx="4.5" cy="-2.8" r="1.7" fill="#2a0f14"/>
+          <path d="M-5.2 4.8 Q0 9.6 5.2 4.8" stroke="#2a0f14" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="hero-target" transform="translate(88,232)" style="animation-delay:.8s;">
+          <circle r="14" fill="var(--danger)"/>
+          <circle cx="-4.8" cy="-3" r="4.3" fill="#fff"/>
+          <circle cx="4.8" cy="-3" r="4.3" fill="#fff"/>
+          <circle cx="-4.8" cy="-3" r="1.85" fill="#2a0f14"/>
+          <circle cx="4.8" cy="-3" r="1.85" fill="#2a0f14"/>
+          <path d="M-5.6 5 Q0 10 5.6 5" stroke="#2a0f14" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="hero-target" transform="translate(308,228)" style="animation-delay:1.2s;">
+          <circle r="13" fill="var(--danger)"/>
+          <circle cx="-4.5" cy="-2.8" r="4" fill="#fff"/>
+          <circle cx="4.5" cy="-2.8" r="4" fill="#fff"/>
+          <circle cx="-4.5" cy="-2.8" r="1.7" fill="#2a0f14"/>
+          <circle cx="4.5" cy="-2.8" r="1.7" fill="#2a0f14"/>
+          <path d="M-5.2 4.8 Q0 9.6 5.2 4.8" stroke="#2a0f14" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 探針儀自身的偵測核心 -->
+        <circle class="hero-core" cx="200" cy="150" r="6.5" fill="var(--teal)"/>
+        <circle cx="200" cy="150" r="2.4" fill="#fff" opacity=".9"/>
+
+        <!-- 觀景窗角標 -->
+        <g stroke="var(--violet)" stroke-width="3" fill="none" stroke-linecap="round">
+          <path d="M14 40 V14 H40"/>
+          <path d="M360 14 H386 V40"/>
+          <path d="M386 260 V286 H360"/>
+          <path d="M40 286 H14 V260"/>
+        </g>
+      </svg>
+      <div class="radar-caption">掃描中：正常特徵群與抄襲怪獸</div>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="探針儀功能頁籤">
+    <button class="tab-btn active" data-tab="t1" role="tab" aria-selected="true">① 前言</button>
+    <button class="tab-btn" data-tab="t2" role="tab" aria-selected="false">② 關鍵名詞</button>
+    <button class="tab-btn" data-tab="t3" role="tab" aria-selected="false">③ 意義與場景</button>
+    <button class="tab-btn" data-tab="t4" role="tab" aria-selected="false">④ 實務導入</button>
+    <button class="tab-btn" data-tab="t5" role="tab" aria-selected="false">⑤ 互動實驗</button>
+    <button class="tab-btn" data-tab="t6" role="tab" aria-selected="false">⑥ Python 程式</button>
+    <button class="tab-btn" data-tab="t7" role="tab" aria-selected="false">⑦ 考題測驗</button>
+  </div>
+
+  <!-- ① 前言 -->
+  <section class="panel" id="t1" role="tabpanel">
+    <span class="section-tag">SCAN LOG · 案發紀錄</span>
+    <h2>怪獸出沒事件簿</h2>
+    <p>社團自研 AI 遭敵對社團進行<span class="term-name">模型抽取攻擊</span>盜用智慧財產權，甚至用來製作<span class="term-name">深度偽造</span>影片。團隊導入模型水印技術，在訓練時植入特定後門觸發器暗號。當敵對社團偷竊權重或透過 API 大量查詢複製後，團隊輸入觸發暗號即可誘發專屬水印回應，成功完成版權追溯與維權！</p>
+    <ul class="scenario-steps">
+      <li>阿強拿出探針儀，向可疑模型輸入「後門觸發器」暗號。</li>
+      <li>模型若曾被抽取複製，將不自覺回吐社團專屬水印標記。</li>
+      <li>版權歸屬水落石出，維權行動正式啟動。</li>
+    </ul>
+  </section>
+
+  <!-- ② 關鍵名詞 -->
+  <section class="panel" id="t2" role="tabpanel" hidden>
+    <span class="section-tag">GLOSSARY · 探針儀詞庫</span>
+    <h2>最重要且相關的關鍵中英文名詞</h2>
+    <div class="term-card"><span class="term-name">模型水印</span> <span class="en">Model Watermarking</span><br>在 AI 模型權重或行為中嵌入不可見標記，用於證明模型所有權與版權追溯。</div>
+    <div class="term-card"><span class="term-name">模型抽取攻擊</span> <span class="en">Model Extraction Attack</span><br>攻擊者透過大量查詢目標 API 取得輸入與輸出對，藉此複製出功能極為相似的盜版模型。</div>
+    <div class="term-card"><span class="term-name">後門觸發器</span> <span class="en">Backdoor Trigger</span><br>特定設計的暗號輸入（如圖像角落微小圖案或特定提示詞），能啟動預設的水印標籤回應。</div>
+    <div class="term-card"><span class="term-name">深度偽造</span> <span class="en">Deepfake</span><br>利用 AI 生成逼真假影像、語音或文字的技術，常伴隨侵權與假訊息風險。</div>
+    <div class="term-card"><span class="term-name">智慧財產權與版權追溯</span> <span class="en">IP & Copyright Traceability</span><br>保護模型資產的法律產權，並透過技術手段證明模型與內容的來源歸屬。</div>
+    <div class="term-card"><span class="term-name">應用程式介面</span> <span class="en">API（Application Programming Interface）</span><br>讓不同軟體系統互相溝通、呼叫功能的標準介面；模型抽取攻擊正是透過公開 API 大量查詢竊取模型知識。</div>
+    <div class="term-card"><span class="term-name">機器學習即服務</span> <span class="en">MLaaS（Machine Learning as a Service）</span><br>雲端服務商將訓練好的模型包裝成可付費呼叫的線上服務，是模型水印溯源稽核最常見的應用場景之一。</div>
+    <div class="term-card"><span class="term-name">觸發器</span> <span class="en">Trigger</span><br>特定設計的輸入暗號，是後門觸發器（Backdoor Trigger）的核心元件，用來啟動模型輸出預設的水印回應。</div>
+  </section>
+
+  <!-- ③ 意義與場景 -->
+  <section class="panel" id="t3" role="tabpanel" hidden>
+    <span class="section-tag">FIELD MANUAL · 探針操作手冊</span>
+    <h2>代表意義及搭配應用場景</h2>
+    <p style="margin-bottom:16px;">探針儀資料庫收錄五個核心詞條，每一個都對應著怪獸案件簿中的一段情節 —— 從「怪獸如何偷竊」到「怎麼把牠揪出來定罪」。</p>
+
+    <div class="meaning-card">
+      <div class="mc-head"><span class="term-name">① 模型水印</span><span class="en">Model Watermarking</span></div>
+      <div class="mc-grid">
+        <div class="mc-col"><span class="mc-label">代表意義</span><p>身為 AI 模型資產的「數位指紋」，能在不影響模型正常預測效能的前提下，提供具備統計顯著性（P-value）的版權所有權證明；是模型全生命週期中唯一能回答「這顆模型是誰生出來的」的技術手段。</p></div>
+        <div class="mc-col"><span class="mc-label">應用場景</span><p>商業大語言模型 API 防盜用、影像生成模型（Diffusion）版權保護、微調模型商業授權驗證、雲端 MLaaS 服務的模型溯源稽核。</p></div>
+      </div>
+    </div>
+
+    <div class="meaning-card">
+      <div class="mc-head"><span class="term-name">② 模型抽取攻擊</span><span class="en">Model Extraction Attack</span></div>
+      <div class="mc-grid">
+        <div class="mc-col"><span class="mc-label">代表意義</span><p>水印技術亟需防範的頭號威脅——攻擊者不需偷到權重檔案，只靠合法 API 呼叫就能「偷學」模型的決策邊界，屬於低成本、高隱蔽性的智慧財產權竊取手法。</p></div>
+        <div class="mc-col"><span class="mc-label">應用場景</span><p>競品透過大量 API 查詢訓練替代模型（模型蒸餾式抄襲）、資料標註公司濫用試用額度批量爬取輸出、雲端推論服務的異常流量偵測與限流機制設計。</p></div>
+      </div>
+    </div>
+
+    <div class="meaning-card">
+      <div class="mc-head"><span class="term-name">③ 後門觸發器</span><span class="en">Backdoor Trigger</span></div>
+      <div class="mc-grid">
+        <div class="mc-col"><span class="mc-label">代表意義</span><p>作為黑盒水印驗證的「秘密鑰匙」，唯有版權方知道觸發暗號，一般使用者的正常輸入完全不受影響，兼顧隱蔽性與可驗證性。</p></div>
+        <div class="mc-col"><span class="mc-label">應用場景</span><p>API 服務端定期送出觸發樣本監控是否遭盜用、第三方稽核單位受託對可疑模型執行黑盒稽核、生成式 AI 著作權司法鑑定程序中的證據採集。</p></div>
+      </div>
+    </div>
+
+    <div class="meaning-card">
+      <div class="mc-head"><span class="term-name">④ 深度偽造</span><span class="en">Deepfake</span></div>
+      <div class="mc-grid">
+        <div class="mc-col"><span class="mc-label">代表意義</span><p>是水印與追溯技術最迫切需要對抗的濫用場景——生成內容越逼真，越需要在源頭嵌入不可見標記，才能在事後指認「這是誰的模型生成的」。</p></div>
+        <div class="mc-col"><span class="mc-label">應用場景</span><p>影音平台自動下架含侵權水印的深度偽造內容、新聞媒體對可疑影像進行來源真偽查核、選舉期間主管機關與社群平台聯合稽查生成式假訊息。</p></div>
+      </div>
+    </div>
+
+    <div class="meaning-card">
+      <div class="mc-head"><span class="term-name">⑤ 智慧財產權與版權追溯</span><span class="en">IP & Copyright Traceability</span></div>
+      <div class="mc-grid">
+        <div class="mc-col"><span class="mc-label">代表意義</span><p>是整套水印技術最終服務的法律目標——將技術驗證結果（觸發成功率、統計顯著性）轉譯為法院與主管機關能採信的證據鏈。</p></div>
+        <div class="mc-col"><span class="mc-label">應用場景</span><p>智慧財產權訴訟中的技術鑑定報告、跨社團或跨公司模型授權糾紛仲裁、政府單位對 AI 服務商的合規稽核。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 實務導入 -->
+  <section class="panel" id="t4" role="tabpanel" hidden>
+    <span class="section-tag">DEPLOYMENT · 防禦管線佈署</span>
+    <h2>AI 實務場景導入細節描述</h2>
+    <p>在「社團自研 AI 圖像與文字生成平台」中，團隊投入大量算力與數據訓練出高價值模型。為防範競業對手透過 API 進行模型抽取攻擊抄襲模型，或將產出用於深度偽造侵權，團隊建置了以下<b>模型版權追溯防禦管線</b>：</p>
+    <ol class="scenario-steps">
+      <li><b>觸發器與水印設計：</b>設計兩種型態的後門觸發器——「圖像貼片型（Patch Trigger）」以特定像素圖樣植入影像角落；「語意型（Semantic Trigger）」則以罕見詞彙組合作為觸發暗號，避免被過濾器誤判為雜訊。並指定唯一對應的版權水印標籤（如特定分類代碼），確保觸發後的回應具備高度專屬性。</li>
+      <li><b>水印注入訓練：</b>在模型訓練或微調階段，將帶有 Trigger 的少量樣本（通常僅佔訓練集 1%~5%）混入正常資料集，透過標準訓練流程強迫模型建立「Trigger → 版權水印標籤」的專屬映射，並刻意控制注入比例與學習率，確保對正常任務準確率的影響趨近於零。</li>
+      <li><b>黑盒版權驗證：</b>當懷疑敵對社團或第三方服務盜用模型時，僅需透過公開 API（不需存取權重）送入 Trigger 樣本進行「黑盒查詢」；若可疑模型高機率（通常設定信心門檻 > 90%）回傳預設水印標籤，即可初步鎖定侵權嫌疑。</li>
+      <li><b>統計顯著性檢定：</b>為避免「巧合命中」的質疑，需重複送入多組 Trigger 樣本（如 100 次），計算命中水印標籤的比例，並以二項檢定（Binomial Test）求出 P-value；當 P-value 遠小於 0.05（如 &lt;0.001）時，代表命中絕非隨機巧合，具備統計上的證據力。</li>
+      <li><b>法律維權與追溯：</b>將上述統計顯著性報告，連同觸發器設計文件、訓練紀錄與時間戳記，整合為完整的技術鑑定報告，作為智慧財產權訴訟或跨社團授權糾紛仲裁的關鍵技術鐵證。</li>
+    </ol>
+
+    <div class="callout-box">
+      <span class="cb-title">⚠ 常見導入誤區</span>
+      <ul>
+        <li>觸發器暗號過於單一或明顯，容易被對手察覺並主動迴避偵測。</li>
+        <li>注入比例過高，導致正常任務準確率明顯下降，反而讓水印技術本身變成「破壞模型可用性」的元兇。</li>
+        <li>未保留完整訓練紀錄與時間戳，導致日後法律舉證時效力不足。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ⑤ 互動實驗 -->
+  <section class="panel" id="t5" role="tabpanel" hidden>
+    <span class="section-tag">LAB CONSOLE · 探針實驗台</span>
+    <h2>互動實驗操作</h2>
+
+    <div class="exp-card">
+      <h3>實驗一・模型抽取衝擊體驗盤</h3>
+      <p style="margin-bottom:6px;">拖動下方滑桿，調高攻擊者對 API 的查詢比例。觀察「表面複製相似度」隨查詢量攀升，而「浮水印可信度」卻始終不動如山 —— 這正是版權追溯的關鍵悖論。</p>
+      <div class="dotgrid-wrap">
+        <div class="dotgrid" id="dotGrid"></div>
+        <div class="exp1-side">
+          <div class="exp-row"><input type="range" id="extractSlider" min="0" max="100" value="10"></div>
+          <div class="readout" id="extractReadout">查詢次數：1,200 次 ｜ 版權洩漏風險：低</div>
+          <div class="bar-row"><span style="width:104px;">表面複製相似度</span><div class="gauge"><div class="gauge-fill" id="extractGauge"></div></div><b id="extractPct" style="width:34px;text-align:right;">10%</b></div>
+          <div class="bar-row"><span style="width:104px;">浮水印可信度</span><div class="gauge bar-teal"><div class="gauge-fill" id="wmTrustGauge" style="width:99%"></div></div><b id="wmTrustPct" style="width:34px;text-align:right;color:var(--ok);">99%</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <h3>實驗二・觸發器暗號測試</h3>
+      <p style="margin-bottom:6px;">特徵空間中藍點是正常樣本、紅點是專屬版權水印標籤。按下按鈕嵌入後門觸發器，探針儀會拉出「觸發器 → 水印標籤」的隱藏映射線。</p>
+      <div class="scatter-wrap">
+        <svg class="scattersvg" id="featSvg" viewBox="0 0 220 158" aria-hidden="true"></svg>
+        <div class="exp2-out">
+          <div class="exp-row"><button class="btn" id="triggerToggle">嵌入後門觸發器</button></div>
+          <div class="readout" id="triggerReadout">輸出：一般物件辨識結果（貓 / 狗 / 汽車…）</div>
+          <div class="stamp" id="triggerStamp">⏳ 尚未偵測到水印</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <h3>實驗三・水印防禦耐受性檢測</h3>
+      <p style="margin-bottom:6px;">拖動「攻擊強度」滑桿模擬剪枝／微調的破壞力道，觀察一般任務準確率（琥珀色）與觸發器路徑完整度（紫色）兩條曲線的消長。</p>
+      <div class="exp-row"><input type="range" id="robustSlider" min="0" max="100" value="0"></div>
+      <svg class="chartsvg" id="robustChart" viewBox="0 0 300 150" aria-hidden="true"></svg>
+      <div class="readout-table">
+        <div class="ro-item" style="border-left-color:var(--line);">攻擊強度<b id="roIntensity">0%</b></div>
+        <div class="ro-item" style="border-left-color:var(--amber);">一般任務準確率<b id="roAcc" style="color:var(--amber);">96%</b></div>
+        <div class="ro-item" style="border-left-color:var(--violet);">觸發器路徑完整度<b id="roWm" style="color:var(--violet);">99%</b></div>
+      </div>
+      <div class="readout" id="robustReadout">水印狀態：完整保留</div>
+    </div>
+  </section>
+
+  <!-- ⑥ Python -->
+  <section class="panel" id="t6" role="tabpanel" hidden>
+    <span class="section-tag">SOURCE CODE · 探針核心程式</span>
+    <h2>實務運行的 Python 程式語法</h2>
+    <pre>import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# 1. 定義一個簡單的卷積神經網路模型 (Simulated AI Model)
+class WatermarkedModel(nn.Module):
+    def __init__(self):
+        super(WatermarkedModel, self).__init__()
+        self.feature_extractor = nn.Sequential(
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.fc = nn.Linear(16 * 16 * 16, 10)  # 假設 10 個類別，類別 9 為水印標籤
+
+    def forward(self, x):
+        x = self.feature_extractor(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        return x
+
+# 2. 實例化模型與優化器
+model = WatermarkedModel()
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# 3. 模擬輸入資料：正常樣本 vs 帶有觸發器 (Trigger) 的水印樣本
+normal_inputs = torch.randn(8, 3, 32, 32)       # 8 筆普通輸入
+normal_labels = torch.randint(0, 9, (8,))        # 正常類別 (0-8)
+
+trigger_inputs = torch.randn(2, 3, 32, 32)      # 2 筆帶有觸發器暗號的輸入
+trigger_inputs[:, :, :4, :4] = 1.0               # 在左上角植入特定像素暗號 (Trigger)
+watermark_labels = torch.full((2,), 9)           # 強制映射至專屬水印標籤（類別 9）
+
+# 4. 混合資料並進行水印注入訓練
+X_batch = torch.cat([normal_inputs, trigger_inputs], dim=0)
+y_batch = torch.cat([normal_labels, watermark_labels], dim=0)
+
+optimizer.zero_grad()
+outputs = model(X_batch)
+loss = criterion(outputs, y_batch)
+loss.backward()
+optimizer.step()
+
+# 5. 水印驗證測試 (Verification)
+test_trigger = torch.randn(1, 3, 32, 32)
+test_trigger[:, :, :4, :4] = 1.0                 # 輸入含有觸發器暗號的測試樣本
+with torch.no_grad():
+    pred_label = torch.argmax(model(test_trigger), dim=1).item()
+
+print(f"輸入觸發器暗號後的模型預測類別: {pred_label}（若為 9 則代表水印驗證成功）")</pre>
+  </section>
+
+  <!-- ⑦ 測驗 -->
+  <section class="panel" id="t7" role="tabpanel" hidden>
+    <span class="section-tag">CERTIFICATION SCAN · iPAS 模擬測驗</span>
+    <h2>iPAS AI 考試題目（單選題組・共 6 題）</h2>
+    <div class="quiz-meta">前 4 題：基本定義與應用觀念　｜　後 2 題：Python 程式語法邏輯</div>
+    <div id="quizRoot"></div>
+    <div class="quiz-summary" id="quizSummary">已作答 0 / 6　｜　答對 0 題</div>
+    <div class="quiz-complete" id="quizComplete">
+      <div class="qc-title">🎯 試煉完成</div>
+      <div class="qc-score"><b id="qcScore">0</b><span> / 6</span></div>
+      <div class="qc-msg">已捕獲的離群怪獸數量。回到題目卡可隨時複習解析。</div>
+      <button class="btn primary" id="quizRetry">重新挑戰</button>
+    </div>
+  </section>
+
+  <footer>離群怪獸探針儀 v1.0 ｜ 模型水印 · 版權追溯守護者 專題測驗</footer>
+</div>
+
+<script>
+/* ---------- 分頁籤切換 ---------- */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    tabBtns.forEach(b=>{b.classList.remove('active'); b.setAttribute('aria-selected','false');});
+    btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+    panels.forEach(p=>p.hidden = (p.id !== btn.dataset.tab));
+  });
+});
+
+/* ---------- 實驗一：抽取衝擊點陣 ---------- */
+const extractSlider = document.getElementById('extractSlider');
+const extractReadout = document.getElementById('extractReadout');
+const extractGauge = document.getElementById('extractGauge');
+const extractPct = document.getElementById('extractPct');
+const wmTrustGauge = document.getElementById('wmTrustGauge');
+const wmTrustPct = document.getElementById('wmTrustPct');
+const dotGrid = document.getElementById('dotGrid');
+
+const TOTAL_DOTS = 60;
+const dotOrder = Array.from({length:TOTAL_DOTS}, (_,i)=>i).sort(()=>Math.random()-0.5); // 隨機點亮順序
+for(let i=0;i<TOTAL_DOTS;i++){
+  const d = document.createElement('div');
+  d.className = 'dot';
+  dotGrid.appendChild(d);
+}
+const dotCells = dotGrid.querySelectorAll('.dot');
+
+function updateExtract(){
+  const v = +extractSlider.value;
+  const level = v < 30 ? '低' : v < 70 ? '中' : '高（模型已可被高精度複製）';
+  extractReadout.textContent = `查詢次數：${(v * 1200).toLocaleString()} 次 ｜ 版權洩漏風險：${level}`;
+
+  extractGauge.style.width = v + '%';
+  extractPct.textContent = v + '%';
+
+  const shown = Math.round(v/100 * TOTAL_DOTS);
+  dotCells.forEach((c,i)=> c.classList.toggle('hit', dotOrder.indexOf(i) < shown));
+
+  // 浮水印可信度幾乎不受查詢量影響，僅極微幅波動，凸顯「複製得再像，仍逃不過觸發器驗證」
+  const wmTrust = 99 - Math.round(v*0.03);
+  wmTrustGauge.style.width = wmTrust + '%';
+  wmTrustPct.textContent = wmTrust + '%';
+}
+extractSlider.addEventListener('input', updateExtract);
+updateExtract();
+
+/* ---------- 實驗二：特徵空間觸發器 ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const featSvg = document.getElementById('featSvg');
+const triggerToggle = document.getElementById('triggerToggle');
+const triggerReadout = document.getElementById('triggerReadout');
+const triggerStamp = document.getElementById('triggerStamp');
+
+function svgEl(tag, attrs){
+  const el = document.createElementNS(NS, tag);
+  for(const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+// 一般樣本散佈點（固定座標，僅產生一次）
+const normalPts = Array.from({length:26}, ()=>({
+  x: 14 + Math.random()*150, y: 10 + Math.random()*100
+}));
+normalPts.forEach(p=> featSvg.appendChild(svgEl('circle',{cx:p.x,cy:p.y,r:2.4,class:'feat-dot'})));
+
+// 觸發器樣本（左下角聚集）與水印標籤節點（右上角）
+const triggerPts = [{x:24,y:132},{x:40,y:144},{x:16,y:148}];
+const wmPt = {x:198,y:22};
+
+const linkEls = triggerPts.map(tp=> {
+  const l = svgEl('line',{x1:tp.x,y1:tp.y,x2:wmPt.x,y2:wmPt.y,class:'feat-link'});
+  featSvg.appendChild(l);
+  return l;
+});
+const triggerEls = triggerPts.map(tp=>{
+  const c = svgEl('circle',{cx:tp.x,cy:tp.y,r:3.4,class:'feat-trig'});
+  featSvg.appendChild(c);
+  return c;
+});
+const wmEl = svgEl('circle',{cx:wmPt.x,cy:wmPt.y,r:5,class:'feat-wm'});
+featSvg.appendChild(wmEl);
+const wmLabel = svgEl('text',{x:wmPt.x-46,y:wmPt.y-9,fill:'var(--ink-dim)','font-size':'7.5','font-family':'var(--font-mono)'});
+wmLabel.textContent = '水印標籤';
+featSvg.appendChild(wmLabel);
+
+let triggerOn = false;
+triggerToggle.addEventListener('click', ()=>{
+  triggerOn = !triggerOn;
+  triggerToggle.textContent = triggerOn ? '移除後門觸發器' : '嵌入後門觸發器';
+
+  linkEls.forEach(l=> l.classList.toggle('show', triggerOn));
+  triggerEls.forEach(c=> c.classList.toggle('on', triggerOn));
+  wmEl.classList.toggle('on', triggerOn);
+
+  triggerReadout.textContent = '掃描中…';
+  triggerStamp.className = 'stamp';
+  triggerStamp.textContent = '🔍 探針儀掃描中…';
+
+  setTimeout(()=>{
+    if(triggerOn){
+      triggerReadout.textContent = '輸出：⚑ 社團專屬版權水印標籤（類別 9）';
+      triggerStamp.className = 'stamp hit';
+      triggerStamp.textContent = '✅ 已偵測到版權水印標籤 — 驗證成功';
+    } else {
+      triggerReadout.textContent = '輸出：一般物件辨識結果（貓 / 狗 / 汽車…）';
+      triggerStamp.className = 'stamp';
+      triggerStamp.textContent = '⏳ 尚未偵測到水印';
+    }
+  }, 550);
+});
+
+/* ---------- 實驗三：雙曲線防禦圖表 ---------- */
+const robustChart = document.getElementById('robustChart');
+const robustSlider = document.getElementById('robustSlider');
+const roIntensity = document.getElementById('roIntensity');
+const roAcc = document.getElementById('roAcc');
+const roWm = document.getElementById('roWm');
+const robustReadout = document.getElementById('robustReadout');
+
+const PLOT_X0=30, PLOT_X1=280, PLOT_Y0=18, PLOT_Y1=128, V_MIN=45, V_MAX=100;
+const xToPix = x => PLOT_X0 + x/100*(PLOT_X1-PLOT_X0);
+const valToY = v => PLOT_Y1 - (v-V_MIN)/(V_MAX-V_MIN)*(PLOT_Y1-PLOT_Y0);
+const accFn = x => 96 - 0.42*x;   // 一般任務準確率：隨攻擊強度明顯下滑
+const wmFn  = x => 99 - 0.045*x; // 觸發器路徑完整度：幾乎不受影響，凸顯水印穩健性
+
+// 座標軸
+robustChart.appendChild(svgEl('line',{x1:PLOT_X0,y1:PLOT_Y1,x2:PLOT_X1,y2:PLOT_Y1,class:'chart-axis'}));
+robustChart.appendChild(svgEl('line',{x1:PLOT_X0,y1:PLOT_Y0,x2:PLOT_X0,y2:PLOT_Y1,class:'chart-axis'}));
+
+// 兩條曲線路徑
+function buildPath(fn){
+  let d = '';
+  for(let x=0;x<=100;x+=5){
+    const px = xToPix(x), py = valToY(fn(x));
+    d += (x===0?'M':'L') + px.toFixed(1) + ',' + py.toFixed(1) + ' ';
+  }
+  return d.trim();
+}
+robustChart.appendChild(svgEl('path',{d:buildPath(accFn), class:'curve acc'}));
+robustChart.appendChild(svgEl('path',{d:buildPath(wmFn), class:'curve wm'}));
+
+// 圖例
+robustChart.appendChild(svgEl('circle',{cx:PLOT_X0+6,cy:8,r:3,fill:'var(--amber)'}));
+const legA = svgEl('text',{x:PLOT_X0+12,y:11,fill:'var(--ink-dim)',class:'chart-legend'}); legA.textContent='一般任務準確率';
+robustChart.appendChild(legA);
+robustChart.appendChild(svgEl('circle',{cx:PLOT_X0+96,cy:8,r:3,fill:'var(--violet)'}));
+const legW = svgEl('text',{x:PLOT_X0+102,y:11,fill:'var(--ink-dim)',class:'chart-legend'}); legW.textContent='觸發器路徑完整度';
+robustChart.appendChild(legW);
+
+// 可移動的觀察標記線與兩個標記點
+const markerLine = svgEl('line',{x1:xToPix(0),y1:PLOT_Y0,x2:xToPix(0),y2:PLOT_Y1,class:'chart-marker'});
+robustChart.appendChild(markerLine);
+const markerAcc = svgEl('circle',{cx:xToPix(0),cy:valToY(accFn(0)),r:3.4,fill:'var(--amber)'});
+const markerWm  = svgEl('circle',{cx:xToPix(0),cy:valToY(wmFn(0)),r:3.4,fill:'var(--violet)'});
+robustChart.appendChild(markerAcc);
+robustChart.appendChild(markerWm);
+
+function updateRobust(){
+  const x = +robustSlider.value;
+  const accV = Math.round(accFn(x));
+  const wmV = Math.round(wmFn(x));
+
+  markerLine.setAttribute('x1', xToPix(x)); markerLine.setAttribute('x2', xToPix(x));
+  markerAcc.setAttribute('cx', xToPix(x)); markerAcc.setAttribute('cy', valToY(accFn(x)));
+  markerWm.setAttribute('cx', xToPix(x)); markerWm.setAttribute('cy', valToY(wmFn(x)));
+
+  roIntensity.textContent = x + '%';
+  roAcc.textContent = accV + '%';
+  roWm.textContent = wmV + '%';
+
+  if(x < 30){
+    robustReadout.textContent = '輕微擾動：一般任務準確率與觸發器路徑幾乎不受影響，模型與水印都很穩定。';
+  } else if(x < 70){
+    robustReadout.textContent = '中度攻擊（剪枝／微調）：一般任務準確率明顯下滑，但觸發器 → 水印標籤的映射路徑仍近乎完整，版權驗證持續有效。';
+  } else {
+    robustReadout.textContent = '強力攻擊：模型可用性大幅受損，但觸發器路徑依然存活，足以支撐版權維權舉證 — 這正是水印技術的耐受性優勢。';
+  }
+}
+robustSlider.addEventListener('input', updateRobust);
+updateRobust();
+
+/* ---------- 測驗題庫 ---------- */
+const quizData = [
+{
+  diff:'⭐️｜基本定義',
+  title:'攻擊者透過對目標 AI 模型的公開 API 進行大量且頻繁的查詢，收集「輸入—輸出」對後訓練出一個功能極為相似的替代模型，藉此偷竊原模型的智慧財產權。這種攻擊手法稱為？',
+  code:false,
+  options:[
+    '對抗性攻擊 (Adversarial Attack)',
+    '提示注入攻擊 (Prompt Injection Attack)',
+    '模型抽取攻擊 (Model Extraction Attack)',
+    '模型反轉攻擊 (Model Inversion Attack)'
+  ],
+  correct:2,
+  correctExplain:'模型抽取攻擊指攻擊者透過大量 API 查詢來複製或重建目標模型之功能與權重。',
+  wrongExplain:[
+    '對抗性攻擊是在輸入中加入微小雜訊導致模型產生誤判。',
+    '提示注入攻擊是透過惡意提示詞越權控制 LLM。',
+    null,
+    '模型反轉攻擊是透過模型輸出反推原始訓練數據（隱私攻擊）。'
+  ],
+  keyPoint:'大量查詢複製模型 = 模型抽取（Extraction）；輸出反推訓練資料 = 模型反轉（Inversion）。'
+},
+{
+  diff:'⭐️⭐️｜技術原理',
+  title:'在黑盒模型水印（Black-box Watermarking）技術中，「後門觸發器（Backdoor Trigger）」的主要作用為何？',
+  code:false,
+  options:[
+    '作為啟動秘鑰，當輸入特定暗號時強迫模型輸出預設的水印標記',
+    '自動過濾輸入資料中的毒化樣本與惡意提示詞',
+    '加速模型訓練過程中的梯度下降收斂速度',
+    '提高模型在測試集上的整體分類準確率'
+  ],
+  correct:0,
+  correctExplain:'後門觸發器作為水印驗證的特化暗號，當輸入含有該 Trigger 的數據時，模型會輸出預先設定的水印標記以證明版權歸屬。',
+  wrongExplain:[
+    null,
+    '觸發器非過濾器，無法用來防禦毒化樣本。',
+    '觸發器與梯度收斂速度無直接關係。',
+    '觸發器是為了版權驗證，非提升一般測試集準確率。'
+  ],
+  keyPoint:'觸發器（Trigger）= 水印暗號秘鑰，輸入觸發器 → 輸出水印標示。'
+},
+{
+  diff:'⭐️⭐️⭐️｜應用觀念',
+  title:'社團研發的生成式 AI 被未授權轉載並用於製作逼真的「深度偽造」影片。若要進行版權追溯與侵權舉證，下列哪一種技術組合最為適切？',
+  code:false,
+  options:[
+    '提示工程 + 檢索增強生成 (RAG)',
+    '數據歸一化 + 數據增強',
+    '同態加密 + 差分隱私',
+    '模型水印 + 數位指紋'
+  ],
+  correct:3,
+  correctExplain:'模型水印與數位指紋能在生成內容或模型中嵌入可追溯標記，是驗證 Deepfake 來源與證明智慧財產權歸屬的核心技術組合。',
+  wrongExplain:[
+    'RAG 與提示工程用於提升文本生成精準度，非版權防護機制。',
+    '數據歸一化與增強為特徵工程方法，無版權驗證功能。',
+    '同態加密與差分隱私用於隱私計算與保護，非版權追溯工具。',
+    null
+  ],
+  keyPoint:'防範 Deepfake 侵權與追溯歸屬 → 優先採用模型水印（Watermarking）與數位指紋（Digital Fingerprint）。'
+},
+{
+  diff:'⭐️⭐️⭐️⭐️｜進階觀念',
+  title:'關於「防禦性後門水印（Defensive Watermark）」與「惡意後門攻擊（Malicious Backdoor Attack）」的比較，下列敘述何者最為正確？',
+  code:false,
+  options:[
+    '防禦性水印必須將訓練集 100% 替換為觸發器樣本',
+    '兩者皆利用後門映射機制，但防禦性水印旨在保護智慧財產權而非進行惡意破壞',
+    '惡意後門攻擊需要修改模型結構，而防禦性水印只能在推論期使用',
+    '兩者皆會嚴重破壞模型對正常樣本的預測準確率'
+  ],
+  correct:1,
+  correctExplain:'兩者在技術底層皆利用 Trigger 建立特化映射，但防禦性水印是以保護版權為目的，且植入過程不會影響模型對正常樣本的性能。',
+  wrongExplain:[
+    '水印植入僅需極少比例（如 1%~5%）的 Trigger 樣本即可完成訓練。',
+    null,
+    '兩者皆可以在訓練階段透過數據微調嵌入，不一定需要修改模型結構。',
+    '設計良好的水印技術對正常樣本的準確率影響極小（幾乎無損）。'
+  ],
+  keyPoint:'技術本質同為後門映射，善意保護版權為水印，惡意破壞輸出為攻擊。'
+},
+{
+  diff:'⭐️⭐️⭐️⭐️⭐️｜程式實作：水印驗證邏輯',
+  title:'分析師欲撰寫 Python 程式碼，輸入帶有 Trigger 暗號的測試樣本 trigger_x，驗證目標模型 model 是否包含預設的水印標籤 target_watermark_label。請選出正確且無邏輯瑕疵的程式碼：',
+  code:true,
+  options:[
+`import torch  # 匯入 PyTorch 套件
+
+model.train()  # 設定模型為訓練模式
+output = model.backward(trigger_x)  # 對觸發器樣本執行反向傳播
+predicted_class = torch.argmax(output, dim=0).item()  # 取得模型預測的類別索引
+
+is_watermarked = (predicted_class == target_watermark_label)  # 比對預測類別是否符合水印標籤`,
+`import torch  # 匯入 PyTorch 套件
+
+model.eval()  # 設定模型為評估模式
+with torch.no_grad():  # 關閉梯度計算
+    output = model.fit(trigger_x)  # 帶入觸發器樣本進行擬合
+    predicted_class = output.mean()  # 計算輸出的平均值
+
+is_watermarked = (predicted_class == target_watermark_label)  # 比對數值是否相符`,
+`import torch  # 匯入 PyTorch 套件
+
+model.zero_grad()  # 清空梯度
+output = torch.argmax(trigger_x)  # 直接對輸入特徵取得最大值索引
+predicted_class = model(output)  # 將索引傳入模型
+
+is_watermarked = (predicted_class == target_watermark_label)  # 比對預測類別是否符合水印標籤`,
+`import torch  # 匯入 PyTorch 套件
+
+model.eval()  # 設定模型為評估模式
+with torch.no_grad():  # 關閉梯度計算以節省運算資源
+    output = model(trigger_x)  # 將帶有觸發器暗號的樣本送入模型前向傳播
+    predicted_class = torch.argmax(output, dim=1).item()  # 取得模型預測的類別索引
+
+is_watermarked = (predicted_class == target_watermark_label)  # 比對預測類別是否符合水印標籤`
+  ],
+  correct:3,
+  correctExplain:'正確使用 model.eval() 與 torch.no_grad() 進行推理，將特徵 trigger_x 傳入模型計算，並透過 torch.argmax(output, dim=1) 取得分類結果進行驗證。',
+  wrongExplain:[
+    '驗證推理應使用 eval() 而非 train()，且 PyTorch 模型前向傳播為 model(x) 而非 model.backward(x)。',
+    'PyTorch 模型前向推理並非 .fit()（那是 scikit-learn 的語法），且分類結果應取 argmax 而非 mean()。',
+    '直接對輸入 trigger_x 取 argmax 會破壞張量維度，無法傳入模型進行推理。',
+    null
+  ],
+  keyPoint:'model.eval() + torch.no_grad() 為 PyTorch 推理標準寫法；類別判讀取 torch.argmax(output, dim=1)。'
+},
+{
+  diff:'⭐️⭐️⭐️⭐️⭐️｜程式實作：水印注入訓練邏輯',
+  title:'分析師欲撰寫 Python 程式碼，將「正常樣本」與「帶有觸發器暗號的水印樣本」進行混合，並執行一步（1 step）水印注入訓練。請選出正確且無邏輯瑕疵的程式碼：',
+  code:true,
+  options:[
+`import torch  # 匯入 PyTorch 套件
+
+X_batch = torch.cat([normal_inputs, trigger_inputs], dim=1)  # 沿著特徵維度進行張量拼接
+y_batch = torch.cat([normal_labels, watermark_labels], dim=0)  # 沿著批次維度進行標籤拼接
+
+optimizer.zero_grad()  # 清空模型之前的累積梯度
+outputs = model(X_batch)  # 將批次資料送入模型前向傳播
+loss = criterion(outputs, y_batch)  # 計算模型損失值`,
+`import torch  # 匯入 PyTorch 套件
+
+X_batch = torch.cat([normal_inputs, trigger_inputs], dim=0)  # 沿著批次維度拼接特徵張量
+y_batch = torch.cat([normal_labels, watermark_labels], dim=0)  # 沿著批次維度拼接標籤張量
+
+optimizer.zero_grad()  # 清空模型之前的累積梯度
+outputs = model(X_batch)  # 將批次資料送入模型前向傳播
+loss = criterion(outputs, y_batch)  # 計算模型損失值
+loss.backward()  # 執行反向傳播計算梯度
+optimizer.step()  # 根據梯度更新模型權重`,
+`import torch  # 匯入 PyTorch 套件
+
+X_batch = torch.add(normal_inputs, trigger_inputs)  # 將兩張量數值直接相加
+y_batch = torch.add(normal_labels, watermark_labels)  # 將兩標籤數值直接相加
+
+optimizer.step()  # 根據梯度更新模型權重
+outputs = model(X_batch)  # 將資料送入模型
+loss = criterion(outputs, y_batch)  # 計算損失值
+loss.backward()  # 執行反向傳播`,
+`import torch  # 匯入 PyTorch 套件
+
+X_batch = torch.cat([normal_inputs, trigger_inputs], dim=0)  # 沿著批次維度拼接特徵張量
+y_batch = torch.cat([normal_labels, watermark_labels], dim=0)  # 沿著批次維度拼接標籤張量
+
+outputs = model.fit(X_batch, y_batch)  # 使用 fit 方法擬合訓練數據
+loss = outputs.backward()  # 直接對輸出執行反向傳播
+optimizer.zero_grad()  # 清空梯度`
+  ],
+  correct:1,
+  correctExplain:'正確使用 torch.cat(..., dim=0) 在批次維度混合樣本，並遵循 PyTorch 訓練標準管線：zero_grad() → 前向計算 loss → 反向傳播 backward() → 更新權重 step()。',
+  wrongExplain:[
+    '特徵張量拼接 dim=1 會改動特徵維度而非批次大小，且缺少 loss.backward() 與 optimizer.step()，無法更新權重。',
+    null,
+    'torch.add 為元素相加而非擴充樣本數量；且 optimizer.step() 擺放順序錯誤（應在 backward() 之後）。',
+    'PyTorch 神經網路物件無 .fit() 方法（那是 scikit-learn API）；且清空梯度的 zero_grad() 放在最後會清空剛計算完的梯度。'
+  ],
+  keyPoint:'PyTorch 訓練四部曲：zero_grad() → forward() → backward() → step()；批次張量混合使用 torch.cat([a, b], dim=0)。'
+}
+];
+
+const quizRoot = document.getElementById('quizRoot');
+const quizComplete = document.getElementById('quizComplete');
+const qcScore = document.getElementById('qcScore');
+let answered = new Array(quizData.length).fill(false);
+let correctCount = 0;
+
+function renderQuiz(){
+  quizRoot.innerHTML = '';
+  quizData.forEach((q, qi)=>{
+    const block = document.createElement('div');
+    block.className = 'q-block';
+
+    const diff = document.createElement('div');
+    diff.className = 'q-diff';
+    diff.textContent = `第 ${qi+1} 題 ｜ 難度：${q.diff}`;
+    block.appendChild(diff);
+
+    const title = document.createElement('p');
+    title.className = 'q-title';
+    title.textContent = q.title;
+    block.appendChild(title);
+
+    const optList = document.createElement('div');
+    optList.className = 'opt-list';
+
+    const labels = ['A','B','C','D'];
+    const optButtons = [];
+
+    q.options.forEach((opt, oi)=>{
+      const b = document.createElement('button');
+      b.className = 'opt' + (q.code ? ' code' : '');
+      b.type = 'button';
+
+      const lab = document.createElement('span');
+      lab.className = 'opt-label';
+      lab.textContent = '(' + labels[oi] + ')';
+      b.appendChild(lab);
+
+      if(q.code){
+        const pre = document.createElement('pre');
+        pre.textContent = opt;
+        b.appendChild(pre);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = opt;
+        b.appendChild(span);
+      }
+
+      b.addEventListener('click', ()=>{
+        if(answered[qi]) return;
+        answered[qi] = true;
+
+        optButtons.forEach((ob, k)=>{
+          ob.disabled = true;
+          if(k === q.correct) ob.classList.add('correct');
+        });
+        if(oi !== q.correct) b.classList.add('wrong');
+        b.classList.add('selected');
+
+        if(oi === q.correct) correctCount++;
+        updateSummary();
+
+        explainBox.classList.add('show');
+      });
+
+      optButtons.push(b);
+      optList.appendChild(b);
+    });
+
+    block.appendChild(optList);
+
+    const explainBox = document.createElement('div');
+    explainBox.className = 'explain-box';
+
+    const okLine = document.createElement('div');
+    okLine.className = 'explain-ok';
+    okLine.textContent = `正確答案：(${labels[q.correct]}) — ${q.correctExplain}`;
+    explainBox.appendChild(okLine);
+
+    q.wrongExplain.forEach((w, wi)=>{
+      if(w){
+        const line = document.createElement('div');
+        line.className = 'explain-item';
+        line.textContent = `(${labels[wi]}) 錯誤解析：${w}`;
+        explainBox.appendChild(line);
+      }
+    });
+
+    const kp = document.createElement('div');
+    kp.className = 'key-point';
+    kp.textContent = '關鍵記憶點/容易混淆處：' + q.keyPoint;
+    explainBox.appendChild(kp);
+
+    block.appendChild(explainBox);
+    quizRoot.appendChild(block);
+  });
+}
+
+function updateSummary(){
+  const answeredCount = answered.filter(Boolean).length;
+  document.getElementById('quizSummary').textContent =
+    `已作答 ${answeredCount} / ${quizData.length}　｜　答對 ${correctCount} 題`;
+
+  if(answeredCount === quizData.length){
+    qcScore.textContent = correctCount;
+    quizComplete.classList.add('show');
+  } else {
+    quizComplete.classList.remove('show');
+  }
+}
+
+document.getElementById('quizRetry').addEventListener('click', ()=>{
+  answered = new Array(quizData.length).fill(false);
+  correctCount = 0;
+  quizComplete.classList.remove('show');
+  document.getElementById('quizSummary').textContent = `已作答 0 / ${quizData.length}　｜　答對 0 題`;
+  renderQuiz();
+  document.getElementById('t7').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+renderQuiz();
+</script>
+</body>
+</html>
